@@ -11,7 +11,7 @@ void thread_pool::worker_thread() {
     }
 }
 
-thread_pool::thread_pool() : shutdown_(false), joiner_(threads_) {
+thread_pool::thread_pool() : shutdown_(false) {
     unsigned const thread_count = std::thread::hardware_concurrency();
     if (!thread_count) {
         throw std::runtime_error("Number of concurrent threads can't be obtained.");
@@ -33,4 +33,9 @@ thread_pool::thread_pool() : shutdown_(false), joiner_(threads_) {
 thread_pool::~thread_pool() {
     shutdown_ = true;
 	condition_.notify_all();
+
+	for (auto& thread : threads_) {
+		if (thread.joinable())
+			thread.join();
+	}
 }

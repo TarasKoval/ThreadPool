@@ -3,7 +3,6 @@
 #include <future>
 #include <functional>
 
-#include "join_threads.h"
 #include "threadsafe_queue.h"
 #include "condition_wrapper.h"
 
@@ -11,7 +10,6 @@ class thread_pool {
     std::atomic_bool shutdown_;
     threadsafe_queue<std::function<void()>> task_queue_;
     std::vector<std::thread> threads_;
-    join_threads joiner_;
     condition_wrapper condition_;
 
     void worker_thread();
